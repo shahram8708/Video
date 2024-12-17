@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Downloader</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center text-primary">Video Downloader</h1>
+        <div class="card p-4 shadow">
+            <form id="fetch-form">
+                <div class="mb-3">
+                    <label for="video_url" class="form-label">Video URL</label>
+                    <input type="url" id="video_url" class="form-control" placeholder="Enter video URL" required>
+                </div>
+                <button type="submit" id="fetch-button" class="btn btn-success w-100">Fetch Video</button>
+                <div class="progress mt-3" id="fetch-progress" style="display: none;">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated" id="fetch-progress-bar"
+                        style="width: 0%;">0%</div>
+                </div>
+            </form>
+
+            <div id="video-details" class="mt-4" style="display: none;">
+                <h4 id="video-title"></h4>
+                <img id="video-thumbnail" class="img-thumbnail" style="max-width: 300px;">
+                <div class="mt-3">
+                    <label for="format-options" class="form-label">Select Quality</label>
+                    <select id="format-options" class="form-select"></select>
+                </div>
+                <button id="download-button" class="btn btn-danger w-100 mt-3">Download</button>
+                <div class="progress mt-3" id="download-progress" style="display: none;">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated" id="download-progress-bar"
+                        style="width: 0%;">0%</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const fetchForm = document.getElementById('fetch-form');
+        const fetchButton = document.getElementById('fetch-button');
+        const fetchProgress = document.getElementById('fetch-progress');
+        const fetchProgressBar = document.getElementById('fetch-progress-bar');
+        const videoDetails = document.getElementById('video-details');
+        const videoTitle = document.getElementById('video-title');
+        const videoThumbnail = document.getElementById('video-thumbnail');
+        const formatOptions = document.getElementById('format-options');
+        const downloadButton = document.getElementById('download-button');
+        const downloadProgress = document.getElementById('download-progress');
+        const downloadProgressBar = document.getElementById('download-progress-bar');
+
+        fetchForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const url = document.getElementById('video_url').value;
+
+            fetchButton.disabled = true;
+            fetchProgress.style.display = 'block';
+
+            const response = await fetch('/fetch_info', {
+                method: 'POST',
+                body: new URLSearchParams({ video_url: url })
+            });
+            const { progress_id } = await response.json();
+
+            const interval = setInterval(async () => {
+                const res = await fetch(`/progress/${progress_id}`);
+                const { progress } = await res.json();
+
+                fetchProgressBar.style.width = `${progress}%`;
+                fetchProgressBar.textContent = `${progress}%`;
+
+                if (progress === '100') {
+                    clearInterval(interval);
+                    const detailsRes = await fetch(`/get_info/${progress_id}`);
+                    const details = await detailsRes.json();
+
+                    videoTitle.textContent = details.title;
+                    videoThumbnail.src = details.thumbnail;
+                    formatOptions.innerHTML = details.formats.map(f =>
+                        `<option value="${f.format_id}">${f.resolution} (${f.ext})</option>`
+                    ).join('');
+                    videoDetails.style.display = 'block';
+                    fetchProgress.style.display = 'none'; r
+                    fetchButton.disabled = false;
+                }
+            }, 1000);
+        });
+
+        downloadButton.addEventListener('click', async () => {
+            const formatId = formatOptions.value;
+            const url = document.getElementById('video_url').value;
+
+            downloadButton.disabled = true;
+            downloadProgress.style.display = 'block';
+
+            const response = await fetch('/download', {
+                method: 'POST',
+                body: new URLSearchParams({ video_url: url, format_id: formatId })
+            });
+            const { progress_id } = await response.json();
+
+            const interval = setInterval(async () => {
+                const res = await fetch(`/progress/${progress_id}`);
+                const { progress } = await res.json();
+
+                downloadProgressBar.style.width = `${progress}%`;
+                downloadProgressBar.textContent = `${progress}%`;
+
+                if (progress === '100') {
+                    clearInterval(interval);
+                    alert("Download Complete!");
+                    window.location.href = `/serve_file/${progress_id}`;
+                    downloadButton.disabled = false;
+                }
+            }, 1000);
+        });
+    </script>
+</body>
+
+</html>
