@@ -4,41 +4,206 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Video Downloader</title>
+    <title>Next-Gen Video Downloader</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #1e1e2f, #2a2a48);
+            color: #ffffff;
+            overflow-x: hidden;
+            background: url('https://picsum.photos/1600/800?random=3');
+            position: relative;
+            background-color: rgba(0, 0, 0, 0.7);
+            background-blend-mode: darken;
+        }
+
+        .hero {
+            padding: 120px 20px;
+            text-align: center;
+            background: url('https://picsum.photos/1600/800?random=1') no-repeat center center/cover;
+            position: relative;
+            color: #fff;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            text-shadow: 2px 4px 10px rgba(0, 0, 0, 0.8);
+            color: #00f7ff;
+        }
+
+        .hero p {
+            font-size: 1.5rem;
+            font-weight: 300;
+            margin: 15px 0;
+        }
+
+        .btn-hero {
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            border-radius: 30px;
+            background: linear-gradient(135deg, #ff6f00, #ff8c00);
+            color: #fff;
+            border: none;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .btn-hero:hover {
+            transform: translateY(-5px);
+            background: linear-gradient(135deg, #ff8c00, #ff6f00);
+            box-shadow: 0 8px 20px rgba(255, 140, 0, 0.4);
+        }
+
+        .form-section {
+            margin-top: -100px;
+            margin-bottom: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            background: url('https://picsum.photos/1600/800?random=2') no-repeat center center/cover;
+            position: relative;
+            background-color: rgba(0, 0, 0, 0.7);
+            background-blend-mode: darken;
+        }
+
+        .form-label {
+            font-weight: 500;
+        }
+
+        .form-control {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: #fff;
+            border-radius: 25px;
+            padding: 15px;
+        }
+
+        .form-control:focus {
+            outline: none;
+            box-shadow: 0 0 10px #00f7ff;
+        }
+
+        #video-details {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        #video-thumbnail {
+            max-width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
+        }
+
+        #video-title {
+            font-size: 1.5rem;
+            color: #00f7ff;
+            margin-top: 15px;
+        }
+
+        .btn-download {
+            background: linear-gradient(135deg, #28a745, #32cd32);
+            border: none;
+            padding: 10px 30px;
+            border-radius: 25px;
+            font-size: 1.2rem;
+            color: #fff;
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .btn-download:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 20px rgba(0, 255, 0, 0.4);
+        }
+
+        footer {
+            width: 100%;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.9rem;
+            text-align: center;
+            padding: 20px;
+        }
+
+        footer a {
+            color: #00f7ff;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+        }
+    </style>
 </head>
 
 <body>
-    <div class="container mt-5">
-        <h1 class="text-center text-primary">Video Downloader</h1>
-        <div class="card p-4 shadow">
-            <form id="fetch-form">
-                <div class="mb-3">
-                    <label for="video_url" class="form-label">Video URL</label>
-                    <input type="url" id="video_url" class="form-control" placeholder="Enter video URL" required>
-                </div>
-                <button type="submit" id="fetch-button" class="btn btn-success w-100">Fetch Video</button>
-                <div class="progress mt-3" id="fetch-progress" style="display: none;">
-                    <div class="progress-bar progress-bar-striped progress-bar-animated" id="fetch-progress-bar"
-                        style="width: 0%;">0%</div>
-                </div>
-            </form>
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Next-Gen Video Downloader</h1>
+            <p>Experience the ultimate video download solution.</p>
+            <button class="btn btn-hero">Start Downloading</button>
+        </div>
+    </section>
+    <section class="form-section">
+        <form id="fetch-form">
+            <div class="mb-3">
+                <label for="video_url" class="form-label">Video URL</label>
+                <input type="url" id="video_url" class="form-control" placeholder="Enter video URL" required>
+            </div>
+            <button type="submit" id="fetch-button" class="btn btn-success w-100">Fetch Video</button>
+            <div class="progress mt-3" id="fetch-progress" style="display: none;">
+                <div class="progress-bar progress-bar-striped progress-bar-animated" id="fetch-progress-bar"
+                    style="width: 0%;">0%</div>
+            </div>
+        </form>
 
-            <div id="video-details" class="mt-4" style="display: none;">
-                <h4 id="video-title"></h4>
-                <img id="video-thumbnail" class="img-thumbnail" style="max-width: 300px;">
-                <div class="mt-3">
-                    <label for="format-options" class="form-label">Select Quality</label>
-                    <select id="format-options" class="form-select"></select>
-                </div>
-                <button id="download-button" class="btn btn-danger w-100 mt-3">Download</button>
-                <div class="progress mt-3" id="download-progress" style="display: none;">
-                    <div class="progress-bar progress-bar-striped progress-bar-animated" id="download-progress-bar"
-                        style="width: 0%;">0%</div>
-                </div>
+        <div id="video-details" class="mt-4" style="display: none;">
+            <h4 id="video-title"></h4>
+            <img id="video-thumbnail" class="img-thumbnail" style="max-width: 300px;">
+            <button id="download-button" class="btn btn-danger w-100 mt-3">Download Now</button>
+            <div class="progress mt-3" id="download-progress" style="display: none;">
+                <div class="progress-bar progress-bar-striped progress-bar-animated" id="download-progress-bar"
+                    style="width: 0%;">0%</div>
             </div>
         </div>
-    </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 Next-Gen Video Downloader | <a href="#">Privacy Policy</a> | <a href="#">Contact Us</a></p>
+    </footer>
 
     <script>
         const fetchForm = document.getElementById('fetch-form');
@@ -48,7 +213,6 @@
         const videoDetails = document.getElementById('video-details');
         const videoTitle = document.getElementById('video-title');
         const videoThumbnail = document.getElementById('video-thumbnail');
-        const formatOptions = document.getElementById('format-options');
         const downloadButton = document.getElementById('download-button');
         const downloadProgress = document.getElementById('download-progress');
         const downloadProgressBar = document.getElementById('download-progress-bar');
@@ -80,18 +244,14 @@
 
                     videoTitle.textContent = details.title;
                     videoThumbnail.src = details.thumbnail;
-                    formatOptions.innerHTML = details.formats.map(f =>
-                        `<option value="${f.format_id}">${f.resolution} (${f.ext})</option>`
-                    ).join('');
                     videoDetails.style.display = 'block';
-                    fetchProgress.style.display = 'none'; r
+                    fetchProgress.style.display = 'none';
                     fetchButton.disabled = false;
                 }
             }, 1000);
         });
 
         downloadButton.addEventListener('click', async () => {
-            const formatId = formatOptions.value;
             const url = document.getElementById('video_url').value;
 
             downloadButton.disabled = true;
@@ -99,7 +259,7 @@
 
             const response = await fetch('/download', {
                 method: 'POST',
-                body: new URLSearchParams({ video_url: url, format_id: formatId })
+                body: new URLSearchParams({ video_url: url })
             });
             const { progress_id } = await response.json();
 
