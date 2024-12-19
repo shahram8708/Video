@@ -29,20 +29,16 @@ def fetch_video_info(url, progress_id):
             info = ydl.extract_info(url, download=False)
             progress[progress_id] = '100'
             video_details[progress_id] = {
-                "title": info.get("title"),
-                "thumbnail": info.get("thumbnail"),
-                "formats": [
-                    {"format_id": f["format_id"], "resolution": f.get("resolution", "Audio"), "ext": f["ext"]}
-                    for f in info.get("formats", []) if f.get("filesize")
-                ]
+                "title": info.get("title", "Unknown Title"),
+                "thumbnail": info.get("thumbnail", ""),
             }
     except Exception:
         video_details[progress_id] = None
 
-def download_video(url, format_id, progress_id):
+def download_video(url, progress_id):
     try:
         ydl_opts = {
-            'format': format_id,
+            'format': 'best', 
             'outtmpl': os.path.join(DOWNLOAD_FOLDER, '%(title)s.%(ext)s'),
             'progress_hooks': [lambda d: update_progress(d, progress_id)],
             'quiet': True
@@ -72,9 +68,8 @@ def get_info(progress_id):
 @app.route('/download', methods=['POST'])
 def download():
     url = request.form['video_url']
-    format_id = request.form['format_id']
     progress_id = secrets.token_hex(8)
-    threading.Thread(target=download_video, args=(url, format_id, progress_id)).start()
+    threading.Thread(target=download_video, args=(url, progress_id)).start()
     return jsonify({"progress_id": progress_id})
 
 @app.route('/progress/<progress_id>')
